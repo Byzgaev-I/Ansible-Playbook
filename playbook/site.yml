@@ -1,79 +1,81 @@
 ---
 - name: Install Clickhouse
   hosts: clickhouse
+  tasks:
+    - block:
+        - name: Get clickhouse distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+            dest: "/tmp/{{ item }}-{{ clickhouse_version }}.rpm"
+            mode: '0644'
+          with_items: "{{ clickhouse_packages }}"
+      rescue:
+        - name: Get clickhouse distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+            dest: "/tmp/clickhouse-common-static-{{ clickhouse_version }}.rpm"
+            mode: '0644'
+    - name: Install clickhouse packages
+      become: true
+      ansible.builtin.yum:
+        name:
+          - /tmp/clickhouse-common-static-{{ clickhouse_version }}.rpm
+          - /tmp/clickhouse-client-{{ clickhouse_version }}.rpm
+          - /tmp/clickhouse-server-{{ clickhouse_version }}.rpm
+      notify: Start clickhouse service
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Firewall open port
+      become: true
+      ansible.builtin.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      loop:
+        - 9000/tcp
+        - 8123/tcp
   handlers:
     - name: Start clickhouse service
       become: true
       ansible.builtin.service:
         name: clickhouse-server
         state: restarted
-  tasks:
-    - name: Ping for testing
-      ansible.builtin.ping:
-
-    - block:
-        - name: Get clickhouse distrib common-static from primary URL
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/stable/main/clickhouse-common-static_{{ clickhouse_version }}_amd64.deb"
-            dest: "./clickhouse-common-static_{{ clickhouse_version }}_amd64.deb"
-            mode: '0644'
-        - name: Get clickhouse-client distrib from primary URL
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/stable/main/clickhouse-client_{{ clickhouse_version }}_amd64.deb"
-            dest: "./clickhouse-client_{{ clickhouse_version }}_amd64.deb"
-            mode: '0644'
-        - name: Get clickhouse-server distrib from primary URL
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/stable/main/clickhouse-server_{{ clickhouse_version }}_amd64.deb"
-            dest: "./clickhouse-server_{{ clickhouse_version }}_amd64.deb"
-            mode: '0644'
-      rescue:
-        - name: Get clickhouse distrib common-static from secondary URL
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/stable/main/clickhouse-common-static_{{ clickhouse_version }}_amd64.deb"
-            dest: "./clickhouse-common-static_{{ clickhouse_version }}_amd64.deb"
-            mode: '0644'
-    - name: Install clickhouse packages
-      become: true
-      ansible.builtin.apt:
-        deb:
-          - "./clickhouse-common-static_{{ clickhouse_version }}_amd64.deb"
-          - "./clickhouse-client_{{ clickhouse_version }}_amd64.deb"
-          - "./clickhouse-server_{{ clickhouse_version }}_amd64.deb"
-      notify: Start clickhouse service
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
+    - name: Pause 20 sec
+      ansible.builtin.pause:
+        seconds: 20
     - name: Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
       register: create_db
-      failed_when: create_db.rc != 0 and create_db.rc != 82
+      failed_when: create_db.rc != 0 and create_db.rc !=82
       changed_when: create_db.rc == 0
+  tags: clickhouse
 
-- name: Install and configure Vector
-  hosts: clickhouse  # Убедитесь, что этот хост определен в вашем inventory
+- name: Install Vector
+  hosts: vector
   tasks:
-    - name: Download Vector
+    - name: Get Vector distrib
       ansible.builtin.get_url:
-        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64.deb"
-        dest: "/tmp/vector-{{ vector_version }}-x86_64.deb"
+        url: "https://packages.timber.io/vector/0.33.0/vector-{{ vector_version }}-{{ vector_architecture }}-unknown-linux-gnu.tar.gz"
+        dest: "/tmp/vector-{{ vector_version }}-{{ vector_architecture }}-unknown-linux-gnu.tar.gz"
         mode: '0644'
-
-    - name: Install Vector
+    - name: Create Vector directory
       become: true
-      ansible.builtin.apt:
-        deb: "/tmp/vector-{{ vector_version }}-x86_64.deb"
-
-    - name: Configure Vector
+      ansible.builtin.file:
+        path: /etc/vector
+    - name: Unarchive Vector package
+      become: true
+      ansible.builtin.unarchive:
+        src: /tmp/vector-{{ vector_version }}-{{ vector_architecture }}-unknown-linux-gnu.tar.gz
+        dest: /etc/vector
+        remote_src: true
+    - name: Template file
       become: true
       ansible.builtin.template:
-        src: "templates/vector.toml.j2"
-        dest: "/etc/vector/vector.toml"
+        src: vector.toml.j2
+        dest: /etc/vector/vector.toml
         mode: '0644'
-
-    - name: Start Vector service
+    - name: Run Vector
       become: true
-      ansible.builtin.service:
-        name: vector
-        state: started
-        enabled: true
-      changed_when: false
+      ansible.builtin.shell: /etc/vector/vector-x86_64-unknown-linux-gnu/bin/vector --config /etc/vector/vector.toml &
+  tags: clickhouse
