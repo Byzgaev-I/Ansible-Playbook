@@ -1,0 +1,8 @@
+---
+all:
+  hosts:
+    debian12:
+      ansible_host: 10.0.2.15  # IP-адрес вашей машины Debian 12
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: '1234'  # Ваш пароль root
