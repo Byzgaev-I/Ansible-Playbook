@@ -29,7 +29,21 @@
  ```yml
 ansible-playbook /home/byzgaev12new/ansible-project/site.yml -i /home/byzgaev12new/ansible-project/prod.yml --diff
 ```
+ ![image.jpg](https://github.com/Byzgaev-I/Ansible-Playbook/blob/main/Снимок%20экрана%202024-10-13%20в%2023.49.58.png)
 
+ ![image.jpg](https://github.com/Byzgaev-I/Ansible-Playbook/blob/main/Снимок%20экрана%202024-10-14%20в%2000.05.24.png)
+
+ playbook успешно завершил выполнение всех задач, связанных с установкой и конфигурацией ClickHouse и Vector, без ошибок. Это значит, что все необходимые действия по установке и настройке этих компонентов были выполнены корректно.
+
+Подведя итоги видим:
+- Установка и настройка ClickHouse:
+- Все задачи, связанные с установкой ClickHouse и проверкой его состояния, выполнены успешно.
+- База данных logs была успешно создана.
+- Установка и настройка Vector:
+- Vector был загружен и установлен с использованием deb-пакета.
+- Конфигурация была развернута из шаблона vector.toml.j2.
+- Сервис Vector был успешно перезапущен.
+  
   
 
 
