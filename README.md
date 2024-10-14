@@ -40,4 +40,3 @@
 ```bash
 ansible-playbook site.yml -i prod.yml --diff
 ```
-```
