@@ -16,15 +16,15 @@
 10) Готовый playbook выложите в свой репозиторий, поставьте тег 08-ansible-02-playbook на фиксирующий коммит, в ответ предоставьте ссылку на него.
 
 
-### Выполнение задания
+### Выполнение задания 1-5
 
-1) Подготовил свой inventory-файл prod.yml.
-2) Дописал playbook
-5) Запустил ansible-lint site.yml и исправил ошибки.
+-  Подготовил свой inventory-файл prod.yml.
+-  Дописал playbook
+-  Запустил ansible-lint site.yml и исправил ошибки.
 
    ![image.jpg](https://github.com/Byzgaev-I/Ansible-Playbook/blob/main/Снимок%20экрана%202024-10-14%20в%2004.51.58.png)
 
-6-8) Запустил 
+### Задание 6-8
 
  ```yml
 ansible-playbook /home/byzgaev12new/ansible-project/site.yml -i /home/byzgaev12new/ansible-project/prod.yml --diff
@@ -170,7 +170,7 @@ clickhouse-01              : ok=18   changed=7    unreachable=0    failed=0    s
 - Сервис Vector был успешно перезапущен.
   
   
-Задание 9
+### Задание 9
 
 # Ansible Playbook для установки ClickHouse и Vector
 
@@ -214,4 +214,6 @@ clickhouse-01              : ok=18   changed=7    unreachable=0    failed=0    s
 ansible-playbook site.yml -i prod.yml --diff
 ```
 
-11) https://github.com/Byzgaev-I/Ansible-Playbook/tags
+### Задание 10 
+
+https://github.com/Byzgaev-I/Ansible-Playbook/tags
