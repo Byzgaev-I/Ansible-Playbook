@@ -33,7 +33,131 @@ ansible-playbook /home/byzgaev12new/ansible-project/site.yml -i /home/byzgaev12n
 
  ![image.jpg](https://github.com/Byzgaev-I/Ansible-Playbook/blob/main/Снимок%20экрана%202024-10-14%20в%2000.05.24.png)
 
- playbook успешно завершил выполнение всех задач, связанных с установкой и конфигурацией ClickHouse и Vector, без ошибок. Это значит, что все необходимые действия по установке и настройке этих компонентов были выполнены корректно.
+ 
+```
+ root@Debian-New12:/home/byzgaev12new/ansible-project# ansible-playbook /home/byzgaev12new/ansible-project/site.yml -i /home/byzgaev12new/ansible-project/prod.yml --diff
+
+PLAY [Install Clickhouse and Vector] **************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Install necessary dependencies] *************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Install python3-venv] ***********************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Create a virtual environment] ***************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+changed: [clickhouse-01]
+
+TASK [Install Paramiko in virtual environment] ****************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+changed: [clickhouse-01]
+
+TASK [Get Clickhouse distrib] *********************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Create directory for Clickhouse extraction] *************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Verify Clickhouse directory exists] *********************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Extract Clickhouse package] *****************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Check if Clickhouse client is installed] ****************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Install Clickhouse client] ******************************************************************************************************************************************************************
+skipping: [clickhouse-01]
+
+TASK [Ensure Clickhouse service is running] *******************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Create database] ****************************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+changed: [clickhouse-01]
+
+PLAY [Install and configure Vector] ***************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Download Vector package] ********************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+changed: [clickhouse-01]
+
+TASK [Install Vector using deb package] ***********************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+Selecting previously unselected package vector.
+(Reading database ... 217739 files and directories currently installed.)
+Preparing to unpack /tmp/vector.deb ...
+Unpacking vector (0.41.1-1) ...
+Setting up vector (0.41.1-1) ...
+systemd-journal:x:999:
+changed: [clickhouse-01]
+
+TASK [Create Vector config directory] *************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+ok: [clickhouse-01]
+
+TASK [Deploy Vector configuration] ****************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+--- before
++++ after: /root/.ansible/tmp/ansible-local-7447zuqo8jsd/tmpji7ormf4/vector.toml.j2
+@@ -0,0 +1,7 @@
++[sources.in]
++type = "stdin"
++
++[sinks.out]
++inputs = ["in"]
++type = "console"
++encoding.codec = "json"
+
+changed: [clickhouse-01]
+
+RUNNING HANDLER [Restart Vector] ******************************************************************************************************************************************************************
+[WARNING]: sftp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+[WARNING]: scp transfer mechanism failed on [10.0.2.15]. Use ANSIBLE_DEBUG=1 to see detailed information
+changed: [clickhouse-01]
+
+PLAY RECAP ****************************************************************************************************************************************************************************************
+clickhouse-01              : ok=18   changed=7    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+```
+
+
+
+ Наш playbook успешно завершил выполнение всех задач, связанных с установкой и конфигурацией ClickHouse и Vector, без ошибок. Это значит, что все необходимые действия по установке и настройке этих компонентов были выполнены корректно.
 
 Подведя итоги видим:
 - Установка и настройка ClickHouse:
