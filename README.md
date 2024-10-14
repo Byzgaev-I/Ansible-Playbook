@@ -20,7 +20,11 @@
 
 1) Подготовил свой inventory-файл prod.yml.
 2) Дописал playbook
-3) 
+5) Запустил ansible-lint site.yml и исправил ошибки.
+
+   ![image.jpg](https://github.com/Byzgaev-I/Ansible-Playbook/blob/main/Снимок%20экрана%202024-10-14%20в%2004.51.58.png)
+
+   
 
 
 # Ansible Playbook для установки ClickHouse и Vector
