@@ -1,4 +1,3 @@
-```markdown
 # Ansible Playbook для установки ClickHouse и Vector
 
 Этот плейбук предназначен для автоматизации установки и настройки ClickHouse и Vector на целевом хосте.
