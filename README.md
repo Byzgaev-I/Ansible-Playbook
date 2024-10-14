@@ -159,6 +159,7 @@ clickhouse-01              : ok=18   changed=7    unreachable=0    failed=0    s
 
  Наш playbook успешно завершил выполнение всех задач, связанных с установкой и конфигурацией ClickHouse и Vector, без ошибок. Это значит, что все необходимые действия по установке и настройке этих компонентов были выполнены корректно.
 
+
 Подведя итоги видим:
 - Установка и настройка ClickHouse:
 - Все задачи, связанные с установкой ClickHouse и проверкой его состояния, выполнены успешно.
@@ -169,7 +170,7 @@ clickhouse-01              : ok=18   changed=7    unreachable=0    failed=0    s
 - Сервис Vector был успешно перезапущен.
   
   
-
+Задание 9
 
 # Ansible Playbook для установки ClickHouse и Vector
 
@@ -212,3 +213,5 @@ clickhouse-01              : ok=18   changed=7    unreachable=0    failed=0    s
 ```bash
 ansible-playbook site.yml -i prod.yml --diff
 ```
+
+11) https://github.com/Byzgaev-I/Ansible-Playbook/tags
